@@ -308,7 +308,7 @@ I'm always eager to connect with fellow developers and creative minds:
 - **LinkedIn**: Pranjal Sailwal
 
 ## Future Direction
-- Moving forward, I'm focused on:
+Moving forward, I'm focused on:
 - Deepening my understanding of Agile project management
 - Exploring new technologies in 3D web development
 - Creating more engaging educational tools
