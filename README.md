@@ -1,10 +1,11 @@
 <div align="center">
-    <img src="images/gif_light.gif" alt="Light Theme GIF" width="300">
+    <img src="Gifs/gif_preloader.gif" alt="Preloader GIF" width="400">
 </div>
 <div align="center">
-    <img src="images/gif_dark.gif" alt="Dark Theme GIF" width="300" style="display: inline-block; margin-right: 20px;">
-    <img src="images/gif_extra.gif" alt="Extra Theme GIF" width="300" style="display: inline-block;">
+    <img src="Gifs/gif_light.gif" alt="Light Theme GIF" width="400" style="display: inline-block; margin-right: 20px;">
+    <img src="Gifs/gif_dark.gif" alt="Dark Theme GIF" width="400" style="display: inline-block;">
 </div>
+
 
 
 
