@@ -307,7 +307,6 @@
         body {
             margin: 0;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
-            overflow: hidden;
         }
         canvas {
             display: block;
@@ -316,8 +315,20 @@
             left: 0;
             width: 100%;
             height: 100%;
+            pointer-events: none; /* Allowed interactions to pass through */
+            z-index: 1; /* Kept canvas above background but below content */
+        }
+        /* Added a container for your site content */
+        .content-container {
+            position: relative;
+            z-index: 2; /* Kept content above canvas */
         }
       </style>
+
+      <!-- site content wrapped in this div -->
+      <div class="content-container">
+          <!--  website content goes here -->
+      </div>
 
       <canvas id="mouseCanvas"></canvas>
 
@@ -350,11 +361,9 @@
                 this.x += this.vx;
                 this.y += this.vy;
 
-                // Bounce off edges
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
 
-                // Mouse interaction
                 const dx = this.x - mouse.x;
                 const dy = this.y - mouse.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -395,26 +404,42 @@
         }
 
         function startDrawing(event) {
-            mouse.isDrawing = true;
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
-            ctx.beginPath();
-            ctx.moveTo(event.x, event.y);
+            // Only enable drawing on desktop
+            if (window.matchMedia("(pointer: fine)").matches) {
+                mouse.isDrawing = true;
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.beginPath();
+                const x = event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+                const y = event.type.includes('touch') ? event.touches[0].clientY : event.clientY;
+                ctx.moveTo(x, y);
+            }
         }
 
         function draw(event) {
             if (!mouse.isDrawing) return;
-            ctx.lineTo(event.x, event.y);
+            const x = event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+            const y = event.type.includes('touch') ? event.touches[0].clientY : event.clientY;
+            ctx.lineTo(x, y);
             ctx.stroke();
         }
 
         function stopDrawing() {
-            mouse.isDrawing = false;
-            setTimeout(() => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                particles.forEach(p => p.draw());
-                connectParticles();
-            }, 5000);
+            if (mouse.isDrawing) {
+                mouse.isDrawing = false;
+                setTimeout(() => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    particles.forEach(p => p.draw());
+                    connectParticles();
+                }, 5000);
+            }
+        }
+
+        function updateMousePosition(event) {
+            const x = event.type.includes('touch') ? event.touches[0].clientX : event.clientX;
+            const y = event.type.includes('touch') ? event.touches[0].clientY : event.clientY;
+            mouse.x = x;
+            mouse.y = y;
         }
 
         function animate() {
@@ -435,14 +460,16 @@
             particles.push(new Particle(x, y));
         }
 
-        window.addEventListener("mousemove", (event) => {
-            mouse.x = event.x;
-            mouse.y = event.y;
-        });
+        // Handle both mouse and touch events
+        window.addEventListener("mousemove", updateMousePosition);
+        window.addEventListener("touchmove", updateMousePosition);
 
-        window.addEventListener("mousedown", startDrawing);
-        window.addEventListener("mousemove", draw);
-        window.addEventListener("mouseup", stopDrawing);
+        // Only enable drawing functionality on desktop
+        if (window.matchMedia("(pointer: fine)").matches) {
+            window.addEventListener("mousedown", startDrawing);
+            window.addEventListener("mousemove", draw);
+            window.addEventListener("mouseup", stopDrawing);
+        }
 
         window.addEventListener("resize", () => {
             canvas.width = window.innerWidth;
