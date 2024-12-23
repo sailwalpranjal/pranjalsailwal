@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <script
+      src="https://kit.fontawesome.com/dcee5ef514.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Pranjal Sailwal Portfolio</title>
+  </head>
+  <body class="light-theme">
+    <div class="experience">
+      <canvas class="experience-canvas"></canvas>
+    </div>
+
+    <div class="preloader">
+      <div class="preloader-content">
+        <!-- Caterpillar -->
+        <div class="caterpillar-wrapper">
+          <div class="caterpillar">
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment"></div>
+            <div class="segment face-segment">
+              <div class="face">
+                <div class="eye"></div>
+                <div class="ear"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+    
+        <!-- Loading Bar -->
+        <div class="loading-bar">
+          <div class="progress"></div>
+        </div>
+      </div>
+    </div>
+    
+    <style>
+    /* Fullscreen Preloader */
+    .preloader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      z-index: 9999;
+      overflow: hidden;
+    }
+    
+    .preloader-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    /* Caterpillar Wrapper */
+    .caterpillar-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    /* Caterpillar */
+    .caterpillar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      animation: caterpillar-crawl 5s linear infinite;
+    }
+    
+    @keyframes caterpillar-crawl {
+      0% {
+        transform: translateX(-50px);
+      }
+      100% {
+        transform: translateX(100px); /* Horizontal movement */
+      }
+    }
+    
+    .segment {
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle, #a8d975 30%, #85bf49 80%);
+      border-radius: 50%;
+      animation: segment-wave 1.5s ease-in-out infinite;
+      position: relative;
+    }
+    
+    /* First and last segments stay still */
+    .segment:nth-child(1),
+    .segment:nth-child(5) {
+      animation: none;
+    }
+    
+    /* Apply delays for the wave effect */
+    .segment:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .segment:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    .segment:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+    
+    /* Wave animation (based on sine wave for natural movement) */
+    @keyframes segment-wave {
+      0% {
+        transform: translateY(0); /* Start at the center */
+      }
+      12.5% {
+        transform: translateY(-3px); /* Slight up */
+      }
+      25% {
+        transform: translateY(-7px); /* Move up */
+      }
+      37.5% {
+        transform: translateY(-3px); /* Move down */
+      }
+      50% {
+        transform: translateY(0px); /* Slight down */
+      }
+      62.5% {
+        transform: translateY(-3px); /* Move up */
+      }
+      75% {
+        transform: translateY(-7px); /* Back to center */
+      }
+      87.5% {
+        transform: translateY(-3px); /* Move down */
+      }
+      100% {
+        transform: translateY( 0px); /* Slight up */
+      }
+    }
+    
+    
+    /* Caterpillar Face */
+    .face-segment {
+      position: relative;
+    }
+    
+    .face {
+      position: absolute;
+      right: -2px;
+      top: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .eye {
+      width: 7px;
+      height: 6px;
+      background: #000;
+      border-radius: 50%;
+      position: absolute;
+    }
+    
+    .ear {
+      width: 8px;
+      height: 4px;
+      background: #85bf49;
+      border-radius: 50%;
+      margin-top: -6px;
+    }
+    
+    /* Loading Bar */
+    .loading-bar {
+      width: 200px;
+      height: 10px;
+      background: #c8e6c9;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .progress {
+      width: 0;
+      height: 100%;
+      background: #4caf50;
+      animation: progress-fill 2s linear forwards;
+    }
+    
+    /* Animations */
+    @keyframes caterpillar-move {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+    
+    @keyframes progress-fill {
+      0% { width: 0; }
+      100% { width: 100%; }
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .segment { width: 20px; height: 20px; }
+      .loading-bar { width: 150px; }
+    }
+    </style>
+    
+    <script>
+      window.addEventListener("load", () => {
+        const preloader = document.querySelector(".preloader");
+        const progress = document.querySelector(".progress");
+        const caterpillar = document.querySelector(".caterpillar");
+      
+        // Reset the progress bar width and force a reflow to start the animation cleanly
+        progress.style.width = "0"; // Reset to 0
+        progress.offsetHeight; // Force reflow
+        progress.style.transition = "width 2s ease"; // Speed up the progress bar transition (2s)
+      
+        // Force the loading bar to fill completely in 2 seconds
+        setTimeout(() => {
+          progress.style.width = "100%"; // Fill the bar to 100%
+        }, 10); // Give a small delay to ensure transition applies
+      
+        // After the loading bar fills, perform all the other operations
+        setTimeout(() => {
+          // Add confusion animation after loading finishes (1s for faster effect)
+          caterpillar.style.animation = "confusion 1s ease-in-out forwards"; // Faster confusion animation
+      
+          // Hide preloader and display main content
+          setTimeout(() => {
+            preloader.style.opacity = 0; // Fade out preloader
+            setTimeout(() => {
+              preloader.style.display = "none"; // Hide preloader completely after fade-out
+            }, 500); // Delay to ensure smooth transition
+          }, 1000); // Shorter duration for the confusion animation (1s)
+        }, 2000); // Wait 2 seconds for the loading bar to complete
+      });
+      </script>
+      
+    
+    
+
+    <div class="page" asscroll-container>
+      <div class="asscrollbar">
+        <div class="asscrollbar__handle"><div></div></div>
+      </div>
+
+      <div class="toggle-bar">
+        <div class="sun-wrapper">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+          >
+            <path
+              fill="currentColor"
+              d="M440-760v-160h80v160h-80Zm266 110-55-55 112-115 56 57-113 113Zm54 210v-80h160v80H760ZM440-40v-160h80v160h-80ZM254-652 140-763l57-56 113 113-56 54Zm508 512L651-255l54-54 114 110-57 59ZM40-440v-80h160v80H40Zm157 300-56-57 112-112 29 27 29 28-114 114Zm283-100q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm0-80q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"
+            />
+          </svg>
+        </div>
+
+        <button class="toggle-button">
+          <div class="toggle-circle"></div>
+        </button>
+
+        <div class="moon-wrapper">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+          >
+            <path
+              fill="currentColor"
+              d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"
+            />
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Mouse trail -->
+      <style>
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+      </style>
+
+      <canvas id="mouseCanvas"></canvas>
+
+      <script>
+        const canvas = document.getElementById("mouseCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#F333FF", "#FFD733", "#FF33A8", "#33FFF5", "#FF8C33", "#33FF8C", "#8C33FF", "#FF3333", "#33A8FF"];
+        const particleCount = 200;
+        const maxDistance = 50;
+        const springStrength = 0.02;
+
+        const mouse = { x: null, y: null, radius: 150, isDrawing: false };
+
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 2;
+                this.vy = (Math.random() - 0.5) * 2;
+                this.size = Math.random() * 3 + 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Mouse interaction
+                const dx = this.x - mouse.x;
+                const dy = this.y - mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < mouse.radius && !mouse.isDrawing) {
+                    const angle = Math.atan2(dy, dx);
+                    this.vx += Math.cos(angle) * 0.2;
+                    this.vy += Math.sin(angle) * 0.2;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function connectParticles() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < maxDistance) {
+                        const opacity = 1 - distance / maxDistance;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${opacity})`;
+                        ctx.lineWidth = 0.3;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function startDrawing(event) {
+            mouse.isDrawing = true;
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = colors[Math.floor(Math.random() * colors.length)];
+            ctx.beginPath();
+            ctx.moveTo(event.x, event.y);
+        }
+
+        function draw(event) {
+            if (!mouse.isDrawing) return;
+            ctx.lineTo(event.x, event.y);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            mouse.isDrawing = false;
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => p.draw());
+                connectParticles();
+            }, 5000);
+        }
+
+        function animate() {
+            if (!mouse.isDrawing) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(particle => {
+                    particle.update();
+                    particle.draw();
+                });
+                connectParticles();
+            }
+            requestAnimationFrame(animate);
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            particles.push(new Particle(x, y));
+        }
+
+        window.addEventListener("mousemove", (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        window.addEventListener("mousedown", startDrawing);
+        window.addEventListener("mousemove", draw);
+        window.addEventListener("mouseup", stopDrawing);
+
+        window.addEventListener("resize", () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        animate();
+      </script>
+
+      <!-- End Cursor -->    
+
+      <div class="page-wrapper" asscroll>
+        <section class="hero">
+          <div class="hero-wrapper">
+            <div class="intro-text">Welcome to my portfolio!</div>
+
+            <div class="arrow-wrapper">
+              <div class="chevrons">
+                <div class="chevrondown"></div>
+                <div class="chevrondown"></div>
+              </div>
+            </div>
+
+            <div class="hero-main">
+              <h1 class="hero-main-title">Pranjal Sailwal</h1>
+              <p class="hero-main-description">Project Manager| Tech Recruitment Manager</p>
+            </div>
+
+            <div class="hero-second">
+              <p class="hero-second-subheading">MY 3d Portfolio</p>
+              <p class="hero-second-description">P.O.R.T.F.O.L.I.O</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="first-move section-margin"></div>
+
+        <section class="first-section section left">
+          <div class="progress-wrapper progress-bar-wrapper-left">
+            <div class="progress-bar"></div>
+          </div>
+          <div class="section-intro-wrapper">
+            <h1 class="section-title">
+              <span class="section-title-text">Introduction</span>
+              <div class="section-title-decoration style1"></div>
+              <div class="section-title-decoration style2"></div>
+              <div class="section-title-decoration style3"></div>
+            </h1>
+            <span class="section-number">01</span>
+          </div>
+
+          <div class="section-detail-wrapper">
+            <h2 class="section-heading">Behind the Scenes😏</h2>
+            <p class="section-text">
+              This project offered an exciting opportunity to explore and experiment with 3D design and web development. While I can’t recall the exact origins of some of the models I used (my sincere apologies for any oversight!), I’ve made a dedicated effort to integrate these assets into a cohesive, immersive experience. If you recognize any of the models as your own, please don’t hesitate to reach out—I would be more than happy to provide proper credit.
+            </p>            
+            <p class="section-text">
+              Although I’m not a professional web developer, this project allowed me to dive deep into the worlds of Three.js and Blender, blending technical exploration with creative expression. Throughout the process, I tested various approaches to bring my vision to life, continuously infusing it with my unique perspective and style.
+            </p>            
+            <p class="section-text">
+              While the final result may not be flawless, the journey was incredibly rewarding. I truly enjoyed the challenge of creating something original and distinctive, and I’m excited to continue refining my skills, pushing the boundaries of what I can create, and expanding on this project as I evolve in my craft.
+            </p>
+            
+            <button class="section-button" style="background-color: #1E3A8A; padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Arial', sans-serif; font-size: 16px; cursor: pointer; transition: all 0.3s ease;">
+              <a href="Button_Reference/index.html" target="_blank" style="color: #fff; text-decoration: none; font-weight: bold;">
+                Visit Time Pass Hub →
+              </a>
+            </button>
+            
+            
+            
+            
+            <h2 class="section-heading">About Me</h2>
+            <p class="section-text">
+              Hello, I'm Pranjal Sailwal, a passionate learner and driven leader from Dehradun, India, currently pursuing a Bachelor of Technology in Computer Science and Engineering at Graphic Era Hill University. I find immense fulfillment in not only creating innovative solutions but also in guiding and collaborating with like-minded individuals to achieve shared goals. I thrive in environments where I can take charge, organize efforts, and inspire teams to perform at their best.  
+            </p>
+            <p class="section-text">
+              My approach to work is rooted in a relentless pursuit of knowledge and excellence. I enjoy delving deep into challenges, exploring uncharted territories in technology, and continuously refining my skills. Equally, I seek out people who share a passion for innovation and creative thinking, as I believe that the best ideas emerge from collaboration and a shared vision.  
+            </p>
+            <p class="section-text">
+              Beyond my technical endeavors, I have a strong inclination for creative design and storytelling, blending aesthetics with functionality to create meaningful experiences. Whether it’s navigating through complex problems or inspiring my peers, I strive to lead with purpose and leave a positive impact in everything I do.  
+            </p>
+            <p class="section-text">
+              For me, success is not just about the destination but about fostering growth—both personal and collective—on the journey. I aim to build a career where leadership, collaboration, and innovation converge to drive transformative outcomes.
+            </p>
+            
+            <button class="section-button" style="background-color: #1E3A8A; padding: 10px 20px; border-radius: 8px; border: none; font-family: 'Arial', sans-serif; font-size: 16px; cursor: pointer; transition: all 0.3s ease;">
+              <a href="/others/resume.pdf" target="_blank" style="color: #fff; text-decoration: none; font-weight: bold;">My resume →</a>
+            </button>
+            
+          </div>
+        </section>
+
+        <div class="second-move section-margin"></div>
+
+        <section class="second-section section right">
+          <div class="progress-wrapper progress-bar-wrapper-right">
+            <div class="progress-bar blue-background"></div>
+          </div>
+
+          <div class="section-intro-wrapper blue-text blue-border">
+            <h1 class="section-title blue-text blue-border">
+              <span class="section-title-text blue-text">Projects</span>
+              <div class="section-title-decoration style1 blue-border"></div>
+              <div class="section-title-decoration style2 blue-border"></div>
+              <div
+                class="section-title-decoration style3 blue-background blue-border"
+              ></div>
+            </h1>
+            <span class="section-number blue-text">02</span>
+          </div>
+
+          
+          
+          <div class="section-detail-wrapper">
+            <p class="section-text">
+              As a dedicated and aspiring technologist, I am continuously enhancing my technical expertise through coursework and personal projects. Below, I’ve highlighted some of my notable projects that reflect my skills in software development, data analysis, and innovative problem-solving. I look forward to further expanding this portfolio as I continue to grow and innovate.
+            </p>
+          
+            <h3 class="section-heading">CipherLab</h3>
+            <p class="section-text">
+              A cutting-edge cryptographic application designed to integrate secure communication standards. CipherLab features both command-line and graphical interfaces, ensuring exceptional usability and 99.9% data integrity. Developed using Python, this project reflects my dedication to blending security with user-centric design.
+            </p>
+            <button class="section-button">
+              <a href="https://github.com/sailwalpranjal/CipherLab" target="_blank">Launch →</a>
+            </button>
+          
+            <h3 class="section-heading">GitPulse</h3>
+            <p class="section-text">
+              A productivity-enhancing tool that streamlines GitHub operations with automated workflows, live commit monitoring, and pull request tracking. GitPulse delivers an intuitive analytics interface, enabling developers to boost productivity by 40%. This project showcases my expertise in automation and data visualization.
+            </p>
+            <button class="section-button">
+              <a href="https://github.com/sailwalpranjal/GitPulse" target="_blank">Launch →</a>
+            </button>
+          
+            <h3 class="section-heading">Pranjal’s Vantage</h3>
+            <p class="section-text">
+              A creative 3D portfolio built with React and Three.js, demonstrating my technical expertise and design acumen. This modular, GPU-accelerated application showcases a seamless blend of performance and creativity, offering a unique platform to present my professional journey.
+            </p>
+            <button class="section-button">
+              <a href="https://pranjalsailwal.com" target="_blank">Launch →</a>
+            </button>
+          
+            <h3 class="section-heading">ByteBuddies</h3>
+            <p class="section-text">
+              A playful and interactive Python-based application featuring an animated duck that dynamically reacts to user interaction. This project improved user engagement by 25%, highlighting my ability to incorporate innovation into user experience design.
+            </p>
+            <button class="section-button">
+              <a href="https://github.com/sailwalpranjal/ByteBuddies" target="_blank">Launch →</a>
+            </button>
+          </div>
+          
+        </section>
+
+        <div class="third-move section-margin"></div>
+
+        <section class="third-section section left">
+          <div class="progress-wrapper progress-bar-wrapper-left">
+            <div class="progress-bar green-background"></div>
+          </div>
+          <div class="section-intro-wrapper green-text green-border">
+            <h1 class="section-title green-text green-border">
+              <span class="section-title-text green-text">Next Step</span>
+              <div class="section-title-decoration style1 green-border"></div>
+              <div class="section-title-decoration style2 green-border"></div>
+              <div
+                class="section-title-decoration style3 green-background green-border"
+              ></div>
+            </h1>
+            <span class="section-number green-text">03</span>
+          </div>
+
+          <div class="section-detail-wrapper">
+            <h3 class="section-heading">Next Step...</h3>
+            <p class="section-text">
+              I am dedicated to progressing in the fields of project management, tech recruiting, and teaching, with a focus on implementing methodologies like Agile and Scrum to improve processes, enhance efficiency, and ensure successful project completion.
+            </p>
+            <p class="section-text">
+              Throughout my journey, I have enjoyed learning technologies such as CSS for styling, JavaScript for interactive content, and Three.js for creating 3D visualizations that support both recruitment and educational environments.
+            </p>
+            <p class="section-text">
+              Moving forward, I am eager to deepen my understanding of Agile project management, Applicant Tracking Systems (ATS), and innovative educational tools, all of which will help me contribute to better project outcomes and more engaging learning experiences.
+            </p>
+            <p class="section-text">
+              These experiences have driven me to explore new approaches, such as using data analysis to improve recruitment strategies, enhance team performance, and create more efficient workflows.
+            </p>
+            <p class="section-text">
+              In addition, I have gained essential leadership and communication skills, which are crucial for managing teams, motivating individuals, and ensuring productive collaboration in diverse settings.
+            </p>
+            <p class="section-text">
+              This project has helped establish a clear path for my future, and I am confident that, with determination and a solid foundation, I will be able to make significant contributions and help others succeed in their careers.
+            </p>
+          </div>          
+        </section>
+
+        <div class="fourth-move section-margin"></div>
+
+        <section class="fourth-section section right">
+          <div class="progress-wrapper progress-bar-wrapper-right">
+            <div class="progress-bar blue-background"></div>
+          </div>
+          <div class="section-intro-wrapper blue-text blue-border">
+            <h1 class="section-title blue-text blue-border">
+              <span class="section-title-text blue-text">Contact Me</span>
+              <div class="section-title-decoration style1 blue-border"></div>
+              <div class="section-title-decoration style2 blue-border"></div>
+              <div
+                class="section-title-decoration style3 blue-background blue-border"
+              ></div>
+            </h1>
+            <span class="section-number blue-text">04</span>
+          </div>
+
+          <div class="section-detail-wrapper">
+            <h3 class="section-heading">Contact Me</h3>
+            <p class="section-text">
+              You're welcome to explore my repositories and get in touch. I am always eager to engage in opportunities that support my ongoing professional development and growth.
+            </p>
+            <ul class="contact-button-wrapper">
+              <li class="icon github">
+                <span class="tooltip">Github</span>
+                <span
+                  ><a href="https://github.com/sailwalpranjal" target="_blank"
+                    ><i class="fa-brands fa-github"></i></a
+                ></span>
+              </li>
+              <li class="icon linkedin">
+                <span class="tooltip">Linkedin</span>
+                <span
+                  ><a
+                    href="https://www.linkedin.com/in/pranjal-sailwal/"
+                    target="_blank"
+                    ><i class="fa-brands fa-linkedin"></i></a
+                ></span>
+              </li>
+              <li class="icon gmail">
+                <span class="tooltip">Email: pranjalsailwal09@gmail.com</span>
+                <span
+                  ><a href="mailto:pranjalsailwal09@gmail.com" target="_blank"
+                    ><i class="fa-regular fa-envelope"></i></a
+                ></span>
+              </li>
+            </ul>            
+          </div>
+        </section>
+      </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
